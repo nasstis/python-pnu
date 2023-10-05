@@ -1,5 +1,6 @@
 import socket
 import datetime
+import time
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -15,8 +16,12 @@ data = client_socket.recv(1024).decode()
 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 print(f"Отримано: {data}\nЧас отримання: {current_time}")
 
-response = "Отримано ваше повідомлення"
-client_socket.send(response.encode())
+time.sleep(5)
+
+if len(data) != client_socket.send(data.encode()):
+    print("Помилка надсилання даних!")
+else:
+    print("Дані успішно надіслані!")
 
 client_socket.close()
 server_socket.close()
