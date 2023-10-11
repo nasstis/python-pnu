@@ -1,8 +1,17 @@
 import cgi
 import html
+import os
+import http.cookies
 
 form = cgi.FieldStorage()
 
+cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
+counter = int(cookie.get("counter", 0).value) if cookie.get("counter") else 0
+
+counter += 1
+
+cookie["counter"] = str(counter)
+print(f"Set-Cookie: counter={counter}; Path=/")
 
 name = form.getvalue("name")
 age = form.getvalue("age")
@@ -21,7 +30,6 @@ colors_text = ', '.join(colors_checkbox)
 if not colors_checkbox:
     colors_text = "не обрано жодного кольору"
 
-
 template_html = f"""
 <!DOCTYPE html>
 <html lang="eu">
@@ -34,6 +42,10 @@ template_html = f"""
     <h3>Ви вибрали, що ваш вік: {age}</h3>
     <h3>Ваша стать: {sex} </h3>
     <h3>Ваші улюблені кольори: {colors_text} </h3>
+    <h3>Кількість заповнених форм: {counter}</h3>
+    <form action="/cgi-bin/clear_cookies.py" method="post">
+        <input type="submit" value="Видалити всі cookies">
+    </form>
 </body>
 </html>
 """
