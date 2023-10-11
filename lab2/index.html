@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Завдання лабораторної 2</title>
+</head>
+<body>
+    <h2>Заповніть, будь ласка анкету</h2>
+
+    <form action="/cgi-bin/form_handler.py" method="post">
+        Уведіть своє ім'я: <input type="text" name="name" required><br>
+        Скільки вам років? <input type="text" name="age" required><br>
+        Ваша стать:
+        <input type="radio" name="sex" value="female"> Жінка
+        <input type="radio" name="sex" value="male"> Чоловік
+        <input type="radio" name="sex" value="nonbinary"> Не визначився
+        <br>
+    
+        Улюблені кольори: <br>
+        <input type="checkbox" name="red" value="red"> Червоний <br>
+        <input type="checkbox" name="green" value="green"> Зелений <br>
+        <input type="checkbox" name="blue" value="blue"> Синій <br>
+        <input type="checkbox" name="yellow" value="yellow"> Жовтий <br>
+        <input type="checkbox" name="another" value="another"> Інший
+        <br>
+    
+        <input type="submit" value="Відправити">
+    </form>
+</body>
+</html>
