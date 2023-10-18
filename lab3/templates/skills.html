@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %} Skills {% endblock %}
+
+{% block body %}
+
+<div class="container d-flex mt-5 align-items-center">
+    <h1 class="title mx-auto">My Skills</h1>
+</div>
+
+<div class="table-container">
+    <Table responsive>
+        <thead>
+            <tr>
+                <th className="text-center">№</th>
+                <th className="text-center">Name</th>
+                <th>Level of knowledge</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for skill in skills %}
+            <tr>
+                <td className="text-center">{{ loop.index }}</td>
+                <td className="text-center"> {{skill["Name"]}}</td>
+                <td><div className="progress-container progress-success">
+                    <Progress max="100" value="{{skill['Level']}}" barClassName="progress-bar-succes">
+                    </Progress>
+                  </div></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </Table>
+</div>
+<div class="container d-flex mt-5 align-items-center">
+    <h5>All Skills: {{ skills|length }}</h5>
+</div>
+
+
+{% endblock %}
