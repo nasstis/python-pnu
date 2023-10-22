@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+{% if message %}
+
+<div class="alert alert-primary alert-dismissible fade show" role="alert" id="alertMessage" style=" position: fixed; width: 100%; z-index: 9999; top: 0;">
+    <button type="button" class="close" aria-label="Close" onclick="closeAlert()"></button>
+    {{ message }}
+</div>
+
+{% endif %}
+
+<div style="text-align: center; padding: 20px; max-width: 80%;">
+    <h1 class="title">Welcome to the Info Page, {{ name }}!</h1>
+    <div style="display: flex; justify-content: flex-end;">
+        <form method="post" action="{{ url_for('logout') }}">
+            <button style="padding: 12px;" type="submit" class="btn btn-primary">Log out</button>
+        </form>
+        <a href="#change_password_section" style="padding: 12px;" class="btn btn-primary">Change password</a>
+    </div>
+</div>
+
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form method="post" action="{{ url_for('add_cookie') }}">
+            <div class="form-group">
+                <label for="key" class="">Key</label>
+                <input name="key" id="key" placeholder="Enter key" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="value" class="">Value</label>
+                <input name="value" id="value" placeholder="Value" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="expiry" class="">Expiry(seconds)</label>
+                <input name="expiry" id="expiry" placeholder="Expiry" type="text" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form method="post" action="{{ url_for('delete_cookie') }}">
+            <div class="form-group">
+                <label for="delete_key" class="">Delete Cookie by Key</label>
+                <input name="delete_key" id="delete_cookie" placeholder="Delete cookie" type="text" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Delete cookie</button>
+        </form>
+    </div>
+</div>
+
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form method="post" action="{{ url_for('delete_all_cookies') }}">
+            <button type="submit" class="btn btn-primary">Delete all cookies</button>
+        </form>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Key</th>
+            <th scope="col">Value</th>
+            <th scope="col">Creation Time</th>
+            <th scope="col">Expiration Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cookie in cookies %}
+            <tr>
+                <td>{{ cookie.key }}</td>
+                <td>{{ cookie.value }}</td>
+                <td>{{ cookie.creation_time }}</td>
+                <td>{{ cookie.expiration_time }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div id="change_password_section" style="text-align: center; padding-top: 20px;">
+    <h1 class="title">Change password</h1>
+</div>
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form method="post" action="{{ url_for('change_password') }}" id="change_password_form">
+            <div class="form-group">
+                <label for="current_password">Current Password</label>
+                <input type="password" class="form-control" id="current_password" name="current_password" required>
+            </div>
+            <div class="form-group">
+                <label for="new_password">New Password</label>
+                <input type="password" class="form-control" id="new_password" name="new_password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm New Password</label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Change Password</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container d-flex mt-5 mb-5">
+    <div class="row ml-5">
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <div class="text-center">
+                <h4>Hello!</h4>
+                <h2>I'm <span class="title">Tsapko Anastasiia</span></h2>
+                <h2>A student of Precarpathian National University and this is my portfolio website!</h2>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <img style="width: 350px;" class="img-fluid rounded-circle shadow" src="{{ url_for('static', filename='images/img2.png') }}" alt="">
+        </div>
+    </div>
+</div>
+
+{% endblock %}
