@@ -61,26 +61,26 @@
     </div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Key</th>
-            <th scope="col">Value</th>
-            <th scope="col">Creation Time</th>
-            <th scope="col">Expiration Time</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for cookie in cookies %}
-            <tr>
-                <td>{{ cookie.key }}</td>
-                <td>{{ cookie.value }}</td>
-                <td>{{ cookie.creation_time }}</td>
-                <td>{{ cookie.expiration_time }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <table class="table mx-auto" style="width: 100%; text-align: center;">
+            <thead>
+                <tr>
+                    <th scope="col">Key</th>
+                    <th scope="col">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cookie_key, cookie_value in cookies %}
+                    <tr>
+                        <td>{{ cookie_key }}</td>
+                        <td>{{ cookie_value }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div id="change_password_section" style="text-align: center; padding-top: 20px;">
     <h1 class="title">Change password</h1>

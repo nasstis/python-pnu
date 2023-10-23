@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 import json
-from flask import redirect, render_template, request, session, url_for
+from flask import make_response, redirect, render_template, request, session, url_for
 from data import skills
-from app import app, os_info, current_time, users, cookies
+from app import app, os_info, current_time, users
 
 @app.route('/')
 def index():
@@ -33,10 +33,15 @@ def contact():
 def info():
     if 'name' not in session:
         return redirect(url_for('login'))
-    
+
     user_agent = request.user_agent
     name = session.get('name')
-    return render_template('info.html', name=name, os_info=os_info, user_agent=user_agent, current_time=current_time, cookies=cookies)
+
+    cookies = request.cookies.items()
+
+    message = request.args.get('message')
+
+    return render_template('info.html', name=name, os_info=os_info, user_agent=user_agent, current_time=current_time, cookies=cookies, message=message)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -61,32 +66,35 @@ def logout():
 
 @app.route('/add_cookie', methods=['POST'])
 def add_cookie():
-    key = request.form['key']
-    value = request.form['value']
-    expiry = int(request.form['expiry'])
-    
-    expiration_time = datetime.now() + timedelta(seconds=expiry)
-    cookies.append({'key': key, 'value': value, 'expiry': expiry, 'creation_time': datetime.now(), 'expiration_time': expiration_time})
-    
-    message = f'Cookie with key "{key}" added successfully.'
-    return render_template('info.html', name=session.get('name'), cookies=cookies, message=message)
+    key = request.form.get('key')
+    value = request.form.get('value')
+    expiry = int(request.form.get('expiry'))
+
+    resp = make_response(redirect(url_for('info', message='Cookie added')))
+
+    resp.set_cookie(key, value, max_age=expiry)
+
+    return resp
 
 @app.route('/delete_cookie', methods=['POST'])
 def delete_cookie():
-    key = request.form['delete_key']
-    global cookies
-    cookies = [cookie for cookie in cookies if cookie['key'] != key]
-    
-    message = f'Cookies with key "{key}" deleted successfully.'
-    return render_template('info.html', name=session.get('name'), cookies=cookies, message=message)
+    delete_key = request.form.get('delete_key')
+
+    resp = make_response(redirect(url_for('info', message='Cookie deleted')))
+
+    resp.delete_cookie(delete_key)
+
+    return resp
 
 @app.route('/delete_all_cookies', methods=['POST'])
 def delete_all_cookies():
-    global cookies
-    cookies = []
-    
-    message = 'All cookies deleted successfully.'
-    return render_template('info.html', name=session.get('name'), cookies=cookies, message=message)
+    resp = make_response(redirect(url_for('info', message='All cookies deleted')))
+
+    cookies = request.cookies
+    for key in cookies.keys():
+        resp.delete_cookie(key)
+
+    return resp
 
 @app.route('/change_password', methods=['POST'])
 def change_password():
@@ -96,15 +104,15 @@ def change_password():
 
     if current_password != users[session['name']]:
         message = "Incorrect current password. Please try again."
-        return render_template('info.html', name=session.get('name'), cookies=cookies, message=message)
+        return render_template('info.html', name=session.get('name'), message=message)
 
     if new_password != confirm_password:
         message = "New password and confirmation do not match. Please try again."
-        return render_template('info.html', name=session.get('name'), cookies=cookies, message=message)
+        return render_template('info.html', name=session.get('name'), message=message)
 
     users[session['name']] = new_password
     with open('users.json', 'w') as file:
         json.dump(users, file)
 
     message = "Password updated successfully."
-    return render_template('info.html', name=session.get('name'), cookies=cookies, message=message)
+    return render_template('info.html', name=session.get('name'), message=message)

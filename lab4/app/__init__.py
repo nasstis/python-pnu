@@ -11,6 +11,4 @@ current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 with open('users.json') as f:
     users = json.load(f)
 
-cookies = []
-
 from app import views
