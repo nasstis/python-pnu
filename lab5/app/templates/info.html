@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block body %}
+
+<div style="text-align: center; padding: 20px; max-width: 80%;">
+    <h1 class="title">Welcome to the Info Page, {{ name }}!</h1>
+    <div style="display: flex; justify-content: flex-end;">
+        <form method="post" action="{{ url_for('logout') }}">
+            <button style="padding: 12px;" type="submit" class="btn btn-primary">Log out</button>
+        </form>
+        <a href="#change_password_section" style="padding: 12px;" class="btn btn-primary">Change password</a>
+    </div>
+</div>
+
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form method="post" action="{{ url_for('add_cookie') }}">
+            <div class="form-group">
+                <label for="key" class="">Key</label>
+                <input name="key" id="key" placeholder="Enter key" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="value" class="">Value</label>
+                <input name="value" id="value" placeholder="Value" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="expiry" class="">Expiry(seconds)</label>
+                <input name="expiry" id="expiry" placeholder="Expiry" type="text" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form method="post" action="{{ url_for('delete_cookie') }}">
+            <div class="form-group">
+                <label for="delete_key" class="">Delete Cookie by Key</label>
+                <input name="delete_key" id="delete_cookie" placeholder="Delete cookie" type="text" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Delete cookie</button>
+        </form>
+    </div>
+</div>
+
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form method="post" action="{{ url_for('delete_all_cookies') }}">
+            <button type="submit" class="btn btn-primary">Delete all cookies</button>
+        </form>
+    </div>
+</div>
+
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <table class="table mx-auto" style="width: 100%; text-align: center;">
+            <thead>
+                <tr>
+                    <th scope="col">Key</th>
+                    <th scope="col">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cookie_key, cookie_value in cookies %}
+                    <tr>
+                        <td>{{ cookie_key }}</td>
+                        <td class="value-cell">{{ cookie_value }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="change_password_section" style="text-align: center; padding-top: 20px;">
+    <h1 class="title">Change password</h1>
+</div>
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form method="post" action="{{ url_for('change_password') }}" id="change_password_form" novalidate>
+            {{ form.csrf_token }}
+                {{ render_field(form.current_password)}}
+                {{ render_field(form.new_password)}}
+                {{ render_field(form.confirm_password)}}
+            {{ form.submit(class="btn-round btn btn-primary btn-lg") }}
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

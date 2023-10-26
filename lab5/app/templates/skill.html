@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %} Skill №{{idx}}{% endblock %}
+{% block body %}
+
+<div class="container d-flex mt-5 align-items-center">
+    <h1 class="title mx-auto">Skill №{{idx}}</h1>
+</div>
+
+{% if idx < skills|length + 1 %}
+<div class="container d-flex mt-5 align-items-center">
+    <h1 class="mx-auto">{{skills[idx-1]["Name"]}}</h1>
+</div>
+<div class="text-center">
+    <div class="progress-container progress-primary">
+      <Progress max="100" value="{{skills[idx-1]['Level']}}" barClass="progress-bar-primary">
+      </Progress>
+    </div>
+  </div>
+{%else%}
+<div class="container d-flex mt-5 align-items-center">
+    <h1 class="mx-auto">Некоректний номер</h1>
+</div>
+{%endif%}
+
+{% endblock %}
