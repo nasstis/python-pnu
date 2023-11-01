@@ -16,4 +16,5 @@ class ChangePasswordForm(FlaskForm):
 
 class TodoForm(FlaskForm):
     title = StringField("Enter a task here", validators=[DataRequired(message="This field is required.")])
+    description = StringField("Describe your task", validators=[DataRequired(message="This field is required.")])
     submit = SubmitField("Save")
