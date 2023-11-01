@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %} About me{% endblock %}
+
+{%
+    set about_me = {
+        'page_title': 'About Me',
+        'image_src': url_for('static', filename='images/img1.jpg'),
+        'main_title': 'About',
+        'content_dict': {
+            'Full Name': 'Tsapko Anastasiia',
+            'Address': 'Ukraine, Ivano-Frankivsk',
+            'Date of Birth': 'January 22, 2004',
+            'Status': 'Student'
+        }
+    }
+%}
+
+
+{% block body %}
+<div class="container-fluid d-flex justify-content-center align-items-center custom-container">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-5">
+                <img style="width: 350px;" class="img-fluid rounded shadow" src="{{about_me.image_src}}" alt="">
+            </div>
+            <div class="col-md-5">
+                <h1 class="title">{{ about_me.main_title }}</h1>
+                {% for subtitle, content in about_me.content_dict.items() %}
+                    <h4 class="title" style="margin-bottom: 0;">{{ subtitle }}</h4>
+                    <p>{{ content }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
