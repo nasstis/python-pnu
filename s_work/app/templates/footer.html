@@ -1,0 +1,37 @@
+{% set footer =  {'Home' : url_for('index'), 
+                'About me': url_for('about'), 
+                'Skills': url_for('skill'),
+                'Contacts': url_for('contact'),
+                'Login': url_for('login')
+                }
+                %}
+
+<footer class="footer ">
+    <div class="container ">
+        <div class="row">
+            <div class="col-md-3">
+                <h1 class="title">PORTFOLIO</h1>
+            </div>
+            <div class="col-md-3">
+                <ul class="nav">
+                    {% for name, url in footer.items() %}
+                        <li class="nav-item">
+                            <a href="{{ url }}" class="nav-link">{{ name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link">{{ current_time }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">OS: {{ os_info }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">User-Agent: {{ user_agent }}</a>
+                    </li>
+                </ul>
+            </div>
+        </footer>
