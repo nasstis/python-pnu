@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import json
 from flask import flash, make_response, redirect, render_template, request, session, url_for
-from app.forms import ChangePasswordForm, FeedbackForm, LoginForm, TodoForm
+from app.forms import ChangePasswordForm, FeedbackForm, LoginForm, RegistrationForm, TodoForm
 from data import skills
 from app import app, os_info, current_time, users, db
 from app.models import Feedback, Todo
@@ -107,32 +107,6 @@ def change_password():
         return redirect(url_for('info'))
     return render_template('info.html', form=form)
 
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    if 'name' in session:
-        return redirect(url_for('info'))
-    
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        name = form.username.data
-        password = form.password.data
-        remember = form.remember.data
-
-        if name in users and users[name] == password:
-            if remember:
-                session['name'] = name
-                flash('You have been logged in successfully to Info Page!', 'success')
-                return redirect(url_for('info'))
-            else:
-                flash('You have been logged in successfully to Home Page!', 'success')
-                return redirect(url_for('index'))
-        else:
-            flash('Invalid username or password', 'warning')
-            return render_template("login.html", form=form)
-        
-    return render_template("login.html", form=form)
-
 @app.route('/todo', methods=['GET', 'POST'])
 def todo():
     form = TodoForm()
@@ -191,3 +165,39 @@ def review():
 
     reviews = Feedback.query.all()
     return render_template("review.html", form=form, reviews=reviews)
+
+####################################################################################################
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash('Account created for {form.username.data}!', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if 'name' in session:
+        return redirect(url_for('info'))
+    
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        remember = form.remember.data
+
+        if email == "test@gmail.com" and password == '123456':
+            if remember:
+                session['name'] = email
+                flash('You have been logged in successfully to Info Page!', 'success')
+                return redirect(url_for('info'))
+            else:
+                flash('You have been logged in successfully to Home Page!', 'success')
+                return redirect(url_for('index'))
+        else:
+            flash('Invalid username or password', 'warning')
+            return render_template("login.html", form=form)
+        
+    return render_template("login.html", form=form)
