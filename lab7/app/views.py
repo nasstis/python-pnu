@@ -4,7 +4,7 @@ from flask import flash, make_response, redirect, render_template, request, sess
 from app.forms import ChangePasswordForm, FeedbackForm, LoginForm, RegistrationForm, TodoForm
 from data import skills
 from app import app, os_info, current_time, users, db
-from app.models import Feedback, Todo
+from app.models import Feedback, Todo, User
 
 @app.route('/')
 def index():
@@ -172,7 +172,10 @@ def review():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash('Account created for {form.username.data}!', 'success')
+        user = User(username=form.username.data, email=form.email.data, password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'Account successfully created for {form.username.data}!', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
@@ -188,7 +191,9 @@ def login():
         password = form.password.data
         remember = form.remember.data
 
-        if email == "test@gmail.com" and password == '123456':
+        user = User.query.filter_by(email=email).first()
+
+        if user and user.verify_password(password):
             if remember:
                 session['name'] = email
                 flash('You have been logged in successfully to Info Page!', 'success')
@@ -201,3 +206,9 @@ def login():
             return render_template("login.html", form=form)
         
     return render_template("login.html", form=form)
+
+@app.route('/users')
+def users():
+    users = User.query.all()
+    total_users = len(users)
+    return render_template('users.html', users=users, total_users=total_users)
