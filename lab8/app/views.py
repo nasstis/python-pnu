@@ -1,7 +1,7 @@
-from datetime import datetime, timedelta
 import json
 from sqlite3 import IntegrityError
 from flask import flash, make_response, redirect, render_template, request, session, url_for
+from flask_login import current_user, login_user, logout_user
 from app.forms import ChangePasswordForm, FeedbackForm, LoginForm, RegistrationForm, TodoForm
 from data import skills
 from app import app, os_info, current_time, users, db
@@ -31,12 +31,11 @@ def contact():
 
 @app.route('/info')
 def info():
-    if 'name' not in session:
-        flash('Please log in first!', 'danger')
-        return redirect(url_for('login'))
+    # if 'name' not in session:
+    #     flash('Please log in first!', 'danger')
+    #     return redirect(url_for('login'))
 
-    name = session.get('name')
-
+    name = current_user.username
     cookies = request.cookies.items()
 
     form = ChangePasswordForm()
@@ -45,7 +44,8 @@ def info():
 
 @app.route('/logout', methods=['POST'])
 def logout():
-    session.pop('name', None)
+    logout_user()
+    flash('You have been logged out successfully', 'success')
     return redirect(url_for('login'))
 
 @app.route('/add_cookie', methods=['POST'])
@@ -171,7 +171,12 @@ def review():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        flash('You already have an account!', 'success')
+        return redirect(url_for('info'))
+    
     form = RegistrationForm()
+
     if form.validate_on_submit():
         try:
             user = User(username=form.username.data, email=form.email.data, password=form.password.data)
@@ -181,32 +186,26 @@ def register():
             return redirect(url_for('login'))
         except IntegrityError:
             db.session.rollback()
-            flash(f'Something went wrong', 'danger')
+            flash('Something went wrong', 'danger')
     return render_template('register.html', form=form)
-
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    if 'name' in session:
+    if current_user.is_authenticated:
+        flash('You already logged in!', 'success')
         return redirect(url_for('info'))
-    
+
     form = LoginForm()
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
 
         if user and user.verify_password(form.password.data):
-            if form.remember.data:
-                session['name'] = form.email.data
-                flash('You have been logged in successfully to Info Page!', 'success')
-                return redirect(url_for('info'))
-            else:
-                flash('You have been logged in successfully to Home Page!', 'success')
-                return redirect(url_for('index'))
+            login_user(user, remember=form.remember.data)
+            flash('You have been logged in successfully!', 'success')
+            return redirect(url_for('info'))
         else:
-            flash('Invalid username or password', 'warning')
-            return render_template("login.html", form=form)
-        
+            flash('Invalid email or password', 'warning')
     return render_template("login.html", form=form)
 
 @app.route('/users')
