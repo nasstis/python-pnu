@@ -1,7 +1,7 @@
 import json
 from sqlite3 import IntegrityError
 from flask import flash, make_response, redirect, render_template, request, session, url_for
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import ChangePasswordForm, FeedbackForm, LoginForm, RegistrationForm, TodoForm
 from data import skills
 from app import app, os_info, current_time, users, db
@@ -30,6 +30,7 @@ def contact():
     return render_template('contact.html')
 
 @app.route('/info')
+@login_required
 def info():
     # if 'name' not in session:
     #     flash('Please log in first!', 'danger')
@@ -213,3 +214,8 @@ def users():
     users = User.query.all()
     total_users = len(users)
     return render_template('users.html', users=users, total_users=total_users)
+
+@app.route('/account')
+@login_required
+def account():
+    return render_template('account.html')
