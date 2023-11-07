@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import json
+from sqlite3 import IntegrityError
 from flask import flash, make_response, redirect, render_template, request, session, url_for
 from app.forms import ChangePasswordForm, FeedbackForm, LoginForm, RegistrationForm, TodoForm
 from data import skills
@@ -172,12 +173,17 @@ def review():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data, password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash(f'Account successfully created for {form.username.data}!', 'success')
-        return redirect(url_for('login'))
+        try:
+            user = User(username=form.username.data, email=form.email.data, password=form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash(f'Account successfully created for {form.username.data}!', 'success')
+            return redirect(url_for('login'))
+        except IntegrityError:
+            db.session.rollback()
+            flash(f'Something went wrong', 'danger')
     return render_template('register.html', form=form)
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -187,15 +193,11 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        email = form.email.data
-        password = form.password.data
-        remember = form.remember.data
+        user = User.query.filter_by(email=form.email.data).first()
 
-        user = User.query.filter_by(email=email).first()
-
-        if user and user.verify_password(password):
-            if remember:
-                session['name'] = email
+        if user and user.verify_password(form.password.data):
+            if form.remember.data:
+                session['name'] = form.email.data
                 flash('You have been logged in successfully to Info Page!', 'success')
                 return redirect(url_for('info'))
             else:

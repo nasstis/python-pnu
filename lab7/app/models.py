@@ -1,6 +1,6 @@
 import datetime
 from app import db
-from werkzeug.security import generate_password_hash, check_password_hash
+import bcrypt
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,7 +28,7 @@ class User(db.Model):
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     def verify_password(self, pwd):
-        return check_password_hash(self.password_hash, pwd)
+        return bcrypt.checkpw(pwd.encode('utf-8'), self.password_hash.encode('utf-8'))

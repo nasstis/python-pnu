@@ -4,9 +4,12 @@ import platform
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.secret_key = 'klchJ89Bch'
+
+bcrypt = Bcrypt(app)
 
 os_info = platform.system()
 current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
