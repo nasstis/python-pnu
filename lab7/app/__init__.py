@@ -14,7 +14,7 @@ current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 with open('users.json') as f:
     users = json.load(f)
 
-app.config.from_pyfile('config.py')
+app.config.from_object('config')
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
