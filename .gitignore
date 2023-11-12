@@ -162,3 +162,5 @@ cython_debug/
 #.idea/
 lab4/app/__pycache__/__init__.cpython-312.pyc
 lab4/app/__pycache__/views.cpython-312.pyc
+
+**/screenshots/lib/

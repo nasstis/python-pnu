@@ -1,0 +1,50 @@
+{% if current_user.is_authenticated %}
+    {% set menu =  {'About me': url_for('about'), 
+                    'Skills': url_for('skill'),
+                    'Contacts': url_for('contact'),
+                    'Feedback': url_for('review'),
+                    'Info': url_for('info'),
+                    'To Do': url_for('todo'),
+                    'My profile': url_for('account'),
+                    'Log out': url_for('logout'),
+                    }
+    %}
+{% else %}
+    {% set menu =  {'About me': url_for('about'), 
+                    'Skills': url_for('skill'),
+                    'Contacts': url_for('contact'),
+                    'Feedback': url_for('review'),
+                    'Info': url_for('info'),
+                    'To Do': url_for('todo'),
+                    'Register': url_for('register'),
+                    'Login': url_for('login'),
+                    }
+    %}
+{% endif %}
+
+<nav class="bg-primary navbar navbar-expand-lg">
+    <div class="container">
+        <div class="navbar-translate">
+            <a href="{{ url_for('index') }}" class="navbar-brand">Portfolio</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="ml-auto navbar-nav">
+                {% for name, url in menu.items() %}
+                    <li class="nav-item">
+                    {% if name == 'Log out' %}
+                        <form action="{{ url }}" method="post">
+                            <button type="submit" class="nav-link" style="background:none;border:none;padding:5;color:inherit;">
+                                <p>{{ name }}</p>
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="{{ url }}" class="nav-link">
+                            <p>{{ name }}</p>
+                        </a>
+                    {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</nav>
