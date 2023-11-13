@@ -7,14 +7,15 @@ from flask_wtf.file import FileField, FileAllowed
 from app.models import User
 
 class ChangePasswordForm(FlaskForm):
-    current_password = PasswordField(label='Current Password', validators=[DataRequired(message="This field is required."), Length(min=4, max=10, message='The password must be between 4 and 10 characters.')])
-    new_password = PasswordField(label='New Password', validators=[DataRequired(message="This field is required."), Length(min=4, max=10, message='The password must be between 4 and 10 characters.')])
-    confirm_password = PasswordField(label='Confirm New Password', validators=[DataRequired(message="This field is required."), Length(min=4, max=10, message='The password must be between 4 and 10 characters.'), EqualTo('new_password', message='New password and confirmation do not match.')])
+    current_password = PasswordField(label='Current Password', validators=[DataRequired(message="This field is required."), Length(min=6, message='Password must be more than 6 characters long')])
+    new_password = PasswordField(label='New Password', validators=[DataRequired(message="This field is required."), Length(min=6, message='Password must be more than 6 characters long')])
+    confirm_password = PasswordField(label='Confirm New Password', validators=[DataRequired(message="This field is required."), Length(min=6, message='Password must be more than 6 characters long')])
     submit = SubmitField("Change Password")
 
     def validate_current_password(self, field):
         if not current_user.verify_password(field.data):
             raise ValidationError('Incorrect current password. Please try again.')
+
 
 class TodoForm(FlaskForm):
     title = StringField("Enter a task here", validators=[DataRequired(message="This field is required.")])
@@ -41,7 +42,7 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('Username already exists. Choose a different one.')
 
-    def validate_email(self, field):
+    def _validateemail(self, field):
         user = User.query.filter_by(email=field.data).first()
         if user:
             raise ValidationError('Email already exists. Please use a different one.')
