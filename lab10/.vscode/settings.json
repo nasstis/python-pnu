@@ -13,5 +13,10 @@
             "database": "db",
             "username": "nastia"
         }
-    ]
+    ],
+
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+      }
+    
 }
