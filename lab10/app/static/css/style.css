@@ -1,0 +1,51 @@
+
+.custom-container {
+    height: 70vh;
+    max-width: 70%;
+    background-color: #6c757d;
+    margin-top: 5%;
+}
+
+footer{
+    margin-top: 7%;
+}
+
+.table-container {
+    width: 80%;
+    margin: auto; 
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    text-align: center;
+    padding: 8px;
+    font-weight: bold;
+    border-bottom: 1px solid #525f7f;
+    color: #adb5bd;
+}
+
+.contact-container {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 5%;
+    text-align: center;
+}
+
+.contact-container .row {
+    justify-content: center;
+}
+
+.danger {
+    color: #ff8d72 !important;
+    font-size: 13px; 
+}
+
+.value-cell {
+    max-height: 100px;
+    max-width: 250px;
+    overflow-y: auto;
+  }
