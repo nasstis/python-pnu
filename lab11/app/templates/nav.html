@@ -3,12 +3,14 @@
                     'Skills': url_for('portfolio.skill'),
                     'Contacts': url_for('portfolio.contact'),
                     'Feedback': url_for('users.review'),
-                    'Info': url_for('info.info'),
                     'To Do': url_for('todo.todo'),
-                    'Info': url_for('info.info'),
-                    'My profile': url_for('auth.account'),
-                    'Log out': url_for('auth.logout'),
-                    'Create post': url_for('post.create'),
+                    'Posts': url_for('post.all_posts'),
+                    'Dropdown': {
+                        'Info': url_for('info.info'),
+                        'My profile': url_for('auth.account'),
+                        'Create post': url_for('post.create'),
+                        'Log out': url_for('auth.logout'),
+                    }
                     }
     %}
 {% else %}
@@ -17,6 +19,7 @@
                     'Contacts': url_for('portfolio.contact'),
                     'Feedback': url_for('users.review'),
                     'To Do': url_for('todo.todo'),
+                    'Posts': url_for('post.all_posts'),
                     'Register': url_for('auth.register'),
                     'Login': url_for('auth.login'),
                     }
@@ -31,21 +34,39 @@
         <div class="collapse navbar-collapse">
             <ul class="ml-auto navbar-nav">
                 {% for name, url in menu.items() %}
-                    <li class="nav-item">
-                    {% if name == 'Log out' %}
-                        <form action="{{ url }}" method="post">
-                            <button type="submit" class="nav-link" style="background:none;border:none;padding:5;color:inherit;">
-                                <p>{{ name }}</p>
-                            </button>
-                        </form>
+                    {% if name == 'Dropdown' %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Account
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                {% for sub_name, sub_url in url.items() %}
+                                    {% if sub_name != 'Log out' %}
+                                        <a class="dropdown-item" href="{{ sub_url }}">{{ sub_name }}</a>
+                                    {% else %}
+                                        <form action="{{ sub_url }}" method="post">
+                                            <button type="submit" class="dropdown-item" >{{ sub_name }}</button>
+                                        </form>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            
+                        </li>
                     {% else %}
-                        <a href="{{ url }}" class="nav-link">
-                            <p>{{ name }}</p>
-                        </a>
+                        <li class="nav-item">
+                                <a href="{{ url }}" class="nav-link">
+                                    <p>{{ name }}</p>
+                                </a>
+                        </li>
                     {% endif %}
-                    </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
 </nav>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
