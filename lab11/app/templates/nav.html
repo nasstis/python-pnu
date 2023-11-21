@@ -1,0 +1,51 @@
+{% if current_user.is_authenticated %}
+    {% set menu =  {'About me': url_for('portfolio.about'), 
+                    'Skills': url_for('portfolio.skill'),
+                    'Contacts': url_for('portfolio.contact'),
+                    'Feedback': url_for('users.review'),
+                    'Info': url_for('info.info'),
+                    'To Do': url_for('todo.todo'),
+                    'Info': url_for('info.info'),
+                    'My profile': url_for('auth.account'),
+                    'Log out': url_for('auth.logout'),
+                    'Create post': url_for('post.create'),
+                    }
+    %}
+{% else %}
+    {% set menu =  {'About me': url_for('portfolio.about'), 
+                    'Skills': url_for('portfolio.skill'),
+                    'Contacts': url_for('portfolio.contact'),
+                    'Feedback': url_for('users.review'),
+                    'To Do': url_for('todo.todo'),
+                    'Register': url_for('auth.register'),
+                    'Login': url_for('auth.login'),
+                    }
+    %}
+{% endif %}
+
+<nav class="bg-primary navbar navbar-expand-lg">
+    <div class="container">
+        <div class="navbar-translate">
+            <a href="{{ url_for('portfolio.index') }}" class="navbar-brand">Portfolio</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="ml-auto navbar-nav">
+                {% for name, url in menu.items() %}
+                    <li class="nav-item">
+                    {% if name == 'Log out' %}
+                        <form action="{{ url }}" method="post">
+                            <button type="submit" class="nav-link" style="background:none;border:none;padding:5;color:inherit;">
+                                <p>{{ name }}</p>
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="{{ url }}" class="nav-link">
+                            <p>{{ name }}</p>
+                        </a>
+                    {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</nav>

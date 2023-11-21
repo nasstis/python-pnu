@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block title %} To Do{% endblock %}
+{% block body %}
+
+<div style="text-align: center; padding-top: 20px;">
+    <h1 class="title">To Do List</h1>
+</div>
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form method="post" action="{{ url_for('todo.add') }}" novalidate>
+            {{ form.csrf_token }}
+                {{ render_field(form.title)}}
+                {{ render_field(form.description)}}
+            {{ form.submit(class="btn-round btn btn-primary btn-lg") }}
+        </form>
+    </div>
+</div>
+<div class="table-container">
+    <Table responsive>
+        <thead>
+            <tr>
+                <th className="text-center">№</th>
+                <th className="text-center">Todo iteam</th>
+                <th className="text-center">Description</th>
+                <th className="text-center">Status</th>
+                <th className="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for todo in todo_list %}
+            <tr>
+                <td className="text-center">{{ todo.id }}</td>
+                <td className="text-center"> {{todo.title}}</td>
+                <td className="text-center"> {{todo.description}}</td>
+                <td className="text-center">
+                    {% if todo.complete == False %}
+                        <span class="badge badge-primary">In progress</span>
+                    {% else %}
+                        <span class="badge badge-default">Completed</span>
+                    {% endif %}
+                </td>
+                <td> <a class="btn btn-success" href="{{ url_for('todo.update', todo_id=todo.id) }}">Update</a>
+                    <a class="btn btn-danger" href="{{ url_for('todo.delete', todo_id=todo.id) }}">Delete</a> </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </Table>
+</div>
+
+{% endblock %}

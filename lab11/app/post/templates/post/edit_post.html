@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block title %} Edit post{% endblock %}
+
+{% block body %}
+
+<div id="edit_post_section" style="text-align: center;">
+    <h1 class="title">Edit post</h1>
+</div>
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form method="post" action="{{ url_for('post.edit_post', post_id=post.id) }}" id="edit_post_form" novalidate enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            {{ render_field(form.title)}}
+            {{ render_field(form.text)}}
+            <div class="form-group">
+                <label for="postType">Post Type:</label>
+                <select class="form-control" id="postType" name="type" style="background-color:#32325d;">
+                    {% for value, label in form.type.choices %}
+                        <option value="{{ value }}" {% if value == form.type.data %} selected {% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="enabledType">Enabled:</label>
+                <select class="form-control" id="enabledType" name="enabled" style="background-color:#32325d;">
+                    {% for value, label in form.enabled.choices %}
+                        <option value="{{ value }}" {% if value == form.enabled.data %} selected {% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+                      
+            {{ render_field(form.image)}}
+            {{form.submit(class="btn-round btn btn-primary btn-lg") }}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

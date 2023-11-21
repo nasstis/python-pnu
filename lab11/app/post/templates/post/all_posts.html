@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block title %} Posts{% endblock %}
+{% block body %}
+
+<div style="text-align: center; padding-top: 20px;">
+    <h1 class="title">
+        All posts</h1>
+</div>
+<div class="table-container">
+    <Table responsive>
+        <thead>
+            <tr>
+                <th className="text-center">Title</th>
+                <th className="text-center">Image</th>
+                <th className="text-center">Text</th>
+                <th className="text-center">Type</th>
+                <th className="text-center">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td className="text-center">
+                    <a href="{{ url_for('post.view_post', post_id=post.id) }}">{{ post.title }}</a>
+                </td>
+                
+                <td className="text-center">
+                    <img alt="..." class="img-fluid rounded shadow-lg" src="{{ url_for('static', filename='post_pics/' + post.image) }}" style="width: 150px; height: 150px;">
+                 </td>
+                <td class="value-cell"> {{post.text}}</td>
+                <td className="text-center"> {{post.type}}</td>
+                <td className="text-center"> {{post.created.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </Table>
+</div>
+
+{% endblock %}
