@@ -24,6 +24,7 @@ class PostForm(FlaskForm):
         choices=type_choices,
         validators=[DataRequired(message="Please select a type.")],
     )
+    category = SelectField('Category', validators=[DataRequired(message="This field is required.")])
     submit = SubmitField("Submit")
 
 
@@ -36,4 +37,15 @@ class EditPostForm(FlaskForm):
     )
     type = SelectField("Type", choices=type_choices)
     enabled = SelectField("Enabled", choices=enabled_choices)
+    category = SelectField('Category')
+    submit = SubmitField("Submit")
+    
+class CategoryForm(FlaskForm):
+    name = StringField("Category name",
+                       validators=[DataRequired(message="This field is required."),])
+    submit = SubmitField("Submit")
+    
+class EditCategoryForm(FlaskForm):
+    name = StringField("Category name",
+                       validators=[DataRequired(message="This field is required."),])
     submit = SubmitField("Submit")

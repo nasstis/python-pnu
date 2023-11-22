@@ -21,8 +21,8 @@ function closeAlert() {
 }
 
 
-document.getElementById('picture').addEventListener('change', function() {
-    var fileName = this.value.split('\\').pop();
-    document.getElementById('custom-file-label').innerText = fileName;
-});
+// document.getElementById('picture').addEventListener('change', function() {
+//     var fileName = this.value.split('\\').pop();
+//     document.getElementById('custom-file-label').innerText = fileName;
+// });
 

@@ -20,6 +20,7 @@
         <div class="col-md-4">
             <div class="post-details">
                 <p><strong>Type:</strong> {{ post.type }}</p>
+                <p><strong>Category:</strong> {{ post.category.name }}</p>
                 <p><strong>Date:</strong> {{ post.created.strftime('%Y-%m-%d %H:%M:%S') }}</p>
                 <p><strong>Enabled:</strong> {{ post.enabled }}</p>
 

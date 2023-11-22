@@ -1,7 +1,7 @@
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from .models import Post
-from .forms import PostForm, EditPostForm
+from .models import Post, Category
+from .forms import PostForm, EditPostForm, CategoryForm, EditCategoryForm
 from . import post_blueprint
 from .utilities import save_picture
 from app import db
@@ -10,8 +10,11 @@ from app import db
 @login_required
 def create():
     form = PostForm()
+    
+    form.category.choices = [(category.id, category.name) for category in Category.query.all()]
 
     if form.validate_on_submit():
+        category = Category.query.get(form.category.data)
         title = form.title.data
         text = form.text.data
         type = form.type.data
@@ -21,7 +24,7 @@ def create():
         else:
             image = 'postdefault.jpg' 
             
-        post = Post(title=title, text=text, image=image, type=type, user_id=current_user.id) 
+        post = Post(title=title, text=text, image=image, type=type, category=category, user_id=current_user.id) 
         try:
             db.session.add(post)
             db.session.commit()
@@ -49,6 +52,8 @@ def edit_post(post_id):
     post = Post.query.get_or_404(post_id)
     form = EditPostForm()
     
+    form.category.choices = [(category.id, category.name) for category in Category.query.all()]
+    
     if form.validate_on_submit():
         if form.image.data:
             post.image = save_picture(form.image.data)
@@ -57,6 +62,7 @@ def edit_post(post_id):
             post.text = form.text.data
             post.type = form.type.data
             post.enabled = bool(form.enabled.data)
+            post.category = Category.query.get(form.category.data)
             db.session.commit()
             flash('Post has been updated!', 'success')
         except Exception as e:
@@ -70,6 +76,7 @@ def edit_post(post_id):
         form.text.data = post.text
         form.type.data =  post.type
         form.enabled.data = post.enabled
+        form.category.data = post.category_id
 
     return render_template('edit_post.html', post=post, form=form)
 
@@ -87,3 +94,56 @@ def delete_post(post_id):
         flash(f'An error occurred: {str(e)}', 'danger')
 
     return redirect(url_for('post.all_posts'))
+
+
+
+
+@post_blueprint.route('/categories', methods=['GET', 'POST'])
+def categories():
+    form = CategoryForm()
+    
+    if form.validate_on_submit():
+        print(form.name.data)
+        name = form.name.data
+        new_category = Category(name=name)
+        try:
+            db.session.add(new_category)
+            db.session.commit()
+            flash('New category added successfully', 'success')
+            return redirect(url_for("post.categories"))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'An error occurred: {str(e)}', 'danger')
+            
+    categories = Category.query.all()
+
+    return render_template('categories.html', form=form, categories=categories)
+
+
+@post_blueprint.route('/<int:category_id>/edit', methods=['GET', 'POST'])
+def edit_category(category_id):
+    category = Category.query.get_or_404(category_id)
+    form = EditCategoryForm()
+    
+    if form.validate_on_submit():
+        try:
+            category.name = form.name.data
+            db.session.commit()
+            flash('Category has been updated!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Failed to update! Error: {str(e)}", category="danger") 
+
+        return redirect(url_for('post.categories'))
+
+    elif request.method == 'GET':
+        form.name.data = category.name
+
+    return render_template('edit_category.html', category=category, form=form)
+
+@post_blueprint.route('/<int:category_id>/delete', methods=['POST'])
+def delete_category(category_id):
+    category = Category.query.get_or_404(category_id)
+    db.session.delete(category)
+    db.session.commit()
+    return redirect(url_for('post.categories'))
