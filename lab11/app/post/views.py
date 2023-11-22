@@ -1,10 +1,11 @@
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from .models import Post, Category
+from .models import Post, Category, Tag
 from .forms import PostForm, EditPostForm, CategoryForm, EditCategoryForm
 from . import post_blueprint
 from .utilities import save_picture
 from app import db
+from sqlalchemy import desc
 
 @post_blueprint.route('/post/create', methods=['GET', 'POST'])
 @login_required
@@ -12,9 +13,11 @@ def create():
     form = PostForm()
     
     form.category.choices = [(category.id, category.name) for category in Category.query.all()]
+    form.tags.choices = [(tag.id, tag.name) for tag in Tag.query.all()]
 
     if form.validate_on_submit():
         category = Category.query.get(form.category.data)
+        tags = [Tag.query.get(tag_id) for tag_id in form.tags.data]
         title = form.title.data
         text = form.text.data
         type = form.type.data
@@ -24,7 +27,7 @@ def create():
         else:
             image = 'postdefault.jpg' 
             
-        post = Post(title=title, text=text, image=image, type=type, category=category, user_id=current_user.id) 
+        post = Post(title=title, text=text, image=image, type=type, category=category, tags=tags, user_id=current_user.id) 
         try:
             db.session.add(post)
             db.session.commit()
@@ -38,7 +41,7 @@ def create():
 
 @post_blueprint.route('/post', methods=['GET'])
 def all_posts():
-    posts = Post.query.filter_by(enabled=True).all()
+    posts = Post.query.filter_by(enabled=True).order_by(desc(Post.created)).all()
 
     return render_template('all_posts.html', posts=posts)
 
@@ -53,6 +56,7 @@ def edit_post(post_id):
     form = EditPostForm()
     
     form.category.choices = [(category.id, category.name) for category in Category.query.all()]
+    form.tags.choices = [(tag.id, tag.name) for tag in Tag.query.all()]
     
     if form.validate_on_submit():
         if form.image.data:
@@ -63,6 +67,8 @@ def edit_post(post_id):
             post.type = form.type.data
             post.enabled = bool(form.enabled.data)
             post.category = Category.query.get(form.category.data)
+            post.tags = [Tag.query.get(tag_id) for tag_id in form.tags.data]
+
             db.session.commit()
             flash('Post has been updated!', 'success')
         except Exception as e:
@@ -77,6 +83,7 @@ def edit_post(post_id):
         form.type.data =  post.type
         form.enabled.data = post.enabled
         form.category.data = post.category_id
+        form.tags.data = [tag.id for tag in post.tags]
 
     return render_template('edit_post.html', post=post, form=form)
 

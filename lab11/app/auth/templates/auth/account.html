@@ -20,10 +20,19 @@
             {{ render_field(update_account_form.email)}}
             {{ render_field(update_account_form.about_me)}}
             <div class="form-group">
-                <label for="picture">Profile Picture</label>
+                <label for="picture">Image</label>
                 <div class="custom-file">
-                    {{ update_account_form.picture(class="custom-file-input", id="picture") }}
-                    <label class="custom-file-label" for="picture" id="custom-file-label">Choose file...</label>
+                    <label class="custom-file-label" for="picture" id="custom-file-label">{{ update_account_form.picture.label }}</label>
+                    {{ render_field(update_account_form.picture, show_label=false, show_errors=false, id='picture') }}
+
+                    {% if update_account_form.picture.errors %}
+                    <br><br>
+                        <ul class="errors">
+                            {% for error in update_account_form.picture.errors %}
+                                <p class="danger">{{ error }}</p>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
             {{ update_account_form.submit(class="btn-round btn btn-primary btn-lg") }}

@@ -37,10 +37,28 @@
                     {% endfor %}
                 </select>
             </div>       
-            {{ render_field(form.image)}}
+            {{ render_field(form.tags)}}   
+            <div class="form-group">
+                <label for="picture">Image</label>
+                <div class="custom-file">
+                    <label class="custom-file-label" for="picture" id="custom-file-label">{{ form.image.label }}</label>
+                    {{ render_field(form.image, show_label=false, show_errors=false, id='picture') }}
+
+                    {% if form.image.errors %}
+                    <br><br>
+                        <ul class="errors">
+                            {% for error in form.image.errors %}
+                                <p class="danger">{{ error }}</p>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+            
             {{form.submit(class="btn-round btn btn-primary btn-lg") }}
         </form>
     </div>
 </div>
 
 {% endblock %}
+
