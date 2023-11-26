@@ -41,7 +41,10 @@ def create():
 
 @post_blueprint.route('/post', methods=['GET'])
 def all_posts():
-    posts = Post.query.filter_by(enabled=True).order_by(desc(Post.created)).all()
+    page = request.args.get('page', 1, type=int)
+    posts_per_page = 3
+
+    posts = Post.query.filter_by(enabled=True).order_by(Post.created.desc()).paginate(page=page, per_page=posts_per_page)
 
     return render_template('all_posts.html', posts=posts)
 

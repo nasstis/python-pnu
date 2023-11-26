@@ -49,3 +49,25 @@ table th, table td {
     max-width: 250px;
     overflow-y: auto;
   }
+  
+  .custom-checkbox input[type="checkbox"] {
+    display: none;
+  }
+  
+  .custom-checkbox input[type="checkbox"] + label:before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 3px;
+    border: 1px solid #32325d;
+    background-color: #fff;
+    vertical-align: middle;
+  }
+  
+  .custom-checkbox input[type="checkbox"]:checked + label:before {
+    background-color: #32325d;
+  }
+
+  
+  

@@ -33,16 +33,41 @@
                  <td class="value-cell"> {{ post.text[:100] }}{% if post.text|length > 100 %}...{% endif %}</td>
                 <td className="text-center"> {{post.type}}</td>
                 <td className="text-center"> {{ post.category.name }}</td>
-                <td className="text-center">
+                <td class="text-center">
                     {% for tag in post.tags %}
-                        {{ tag.name }},
+                        <span class="badge badge-primary">{{ tag.name }}</span>
                     {% endfor %}
-                </td>
+                </td>   
                 <td className="text-center"> {{post.created.strftime('%Y-%m-%d %H:%M:%S')}}</td>
             </tr>
             {% endfor %}
         </tbody>
     </Table>
+    <nav aria-label="...">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {% if not posts.has_prev %}disabled{% endif %}">
+                <a class="page-link"
+                   href="{{ url_for(".all_posts", page=posts.prev_num) }}"
+                   tabindex="-1"><</a>
+            </li>
+    
+            {% for page in posts.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                <li class="page-item {% if page == posts.page %}active{% endif %}">
+                    <a class="page-link"
+                       href="{{ url_for(".all_posts", page=page) }}">
+                        {{ page or "..." }}
+                    </a>
+                </li>
+            {% endfor %}
+    
+            <li class="page-item {% if not posts.has_next %}disabled{% endif %}">
+                <a class="page-link"
+                   href="{{ url_for(".all_posts", page=posts.next_num) }}">></a>
+            </li>
+        </ul>
+    </nav>
+    
+    
 </div>
 
 {% endblock %}

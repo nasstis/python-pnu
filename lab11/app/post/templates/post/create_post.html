@@ -13,23 +13,9 @@
             {{ form.csrf_token }}
                 {{ render_field(form.title)}}
                 {{ render_field(form.text)}}
-                <div class="form-group">
-                    <label for="postType">Post Type:</label>
-                    <select class="form-control" id="postType" name="type" style="background-color:#32325d;">
-                        {% for value, label in form.type.choices %}
-                            <option value="{{ value }}">{{ label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="categoryType">Category:</label>
-                    <select class="form-control" id="categoryType" name="category" style="background-color:#32325d;">
-                        {% for value, label in form.category.choices %}
-                            <option value="{{ value }}" {% if value == form.category.data %} selected {% endif %}>{{ label }}</option>
-                        {% endfor %}
-                    </select>
-                </div> 
-                {{ render_field(form.tags)}}               
+                {{ render_field(form.type)}}
+                {{ render_field(form.category)}}
+                {{ render_field(form.tags) }}
                 <div class="form-group">
                     <label for="picture">Image</label>
                     <div class="custom-file">
