@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block title %} Reviews{% endblock %}
+{% block body %}
+
+<div style="text-align: center; padding-top: 20px;">
+    <h2 class="title">
+        Here you can leave your feedback</h2>
+</div>
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form class="form" method="post" action="{{ url_for('users.review') }}" novalidate>
+            {{ form.csrf_token }}
+                {{ render_field(form.name)}}
+                {{ render_field(form.text)}}
+                {{ render_field(form.rating)}}
+            {{ form.submit(class="btn-round btn btn-primary btn-lg") }}
+        </form>
+    </div>
+</div>
+
+<div style="text-align: center; padding-top: 20px;">
+    <h1 class="title">
+        All reviews</h1>
+</div>
+<div class="table-container">
+    <Table responsive>
+        <thead>
+            <tr>
+                <th className="text-center">№</th>
+                <th className="text-center">Username</th>
+                <th className="text-center">Review</th>
+                <th className="text-center">Rating</th>
+                <th className="text-center">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in reviews %}
+            <tr>
+                <td className="text-center">{{ review.id }}</td>
+                <td className="text-center"> {{review.name}}</td>
+                <td class="value-cell"> {{review.text}}</td>
+                <td className="text-center"> 
+                    <span class="badge badge-primary" style="font-size: 14px;">{{review.rating}}</span> 
+                </td>
+                <td className="text-center"> {{review.date_posted}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </Table>
+</div>
+
+{% endblock %}
