@@ -5,6 +5,7 @@ from .base import BaseTest
 
 class TodoTest(BaseTest):
     def test_todo_create(self):
+        '''Tests if a new todo item can be created successfully.'''
         data = {
             'title': 'Write flask tests',  
             'description': 'New description', 
@@ -19,6 +20,7 @@ class TodoTest(BaseTest):
             self.assertIsNotNone(todo)
             
     def test_get_all_todo(self):
+        '''Tests if retrieving all todo items works correctly.'''
         todo1 = Todo(title='todo1', description='description1', complete=False)
         todo2 = Todo(title='todo2', description='description2', complete=False)
         db.session.add_all([todo1, todo2])
@@ -29,6 +31,7 @@ class TodoTest(BaseTest):
         self.assertEqual(Todo.query.count(), 2)
         
     def test_update_todo_complete(self):
+        '''Tests if marking a todo as complete works correctly.'''
         todo1 = Todo(title='todo1', description='description1', complete=False)
         db.session.add(todo1)
         with self.client:
@@ -39,6 +42,7 @@ class TodoTest(BaseTest):
             self.assertTrue(updated_todo.complete)
             
     def test_delete_todo(self):
+        '''Tests if deleting a todo item works correctly.'''
         todo1 = Todo(title="todo1", description="description1", complete=False)
         db.session.add(todo1)
 

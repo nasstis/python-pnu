@@ -7,6 +7,7 @@ from .base import BaseTest
 class AuthTest(BaseTest):
     
     def test_view_register(self):
+        '''Tests if the register page loads correctly.'''
         with self.client:
             response = self.client.get(url_for('auth.register'))
             
@@ -16,6 +17,7 @@ class AuthTest(BaseTest):
             self.assertIn(b'Sign up', response.data)
             
     def test_register_post(self):
+        '''Tests if user registration works successfully.'''
         with self.client:
             response = self.client.post(
                 '/register',
@@ -28,6 +30,7 @@ class AuthTest(BaseTest):
         self.assertIsNotNone(user)
     
     def test_view_login(self):
+        '''Tests if the login page loads correctly.'''
         with self.client:
             response = self.client.get(url_for('auth.login'))
             
@@ -37,6 +40,7 @@ class AuthTest(BaseTest):
             self.assertIn(b'Login', response.data)
             
     def test_login(self):
+        '''Tests if user login works successfully.'''
         with self.client:
             response = self.client.post(
                 url_for('auth.login'),
@@ -48,6 +52,7 @@ class AuthTest(BaseTest):
             self.assertTrue(current_user.is_authenticated)
             
     def test_logout(self):
+        '''Tests if user logout works successfully.'''
         login_user(User.query.filter_by(id=1).first())
             
         response = self.client.post(url_for('auth.logout'), follow_redirects=True)
@@ -56,6 +61,7 @@ class AuthTest(BaseTest):
         self.assertFalse(current_user.is_authenticated)
 
     def test_update(self):
+        '''Tests if user account update works successfully.'''
         login_user(User.query.filter_by(id=1).first())
 
         with self.client:
