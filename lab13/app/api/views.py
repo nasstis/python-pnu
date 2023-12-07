@@ -86,11 +86,11 @@ def update_todo(id):
     except IntegrityError:
         db.session.rollback()
         
-    return jsonify(message='todo was updated'), 204
+    return jsonify(message='todo was updated'), 200
 
 @api_bp.route('/todos/<int:id>', methods=['DELETE'])
 def delete_todo(id):
       todo = Todo.query.get(id)
       db.session.delete(todo)
       db.session.commit()
-      return jsonify({'message' : 'todo has been deleted!'}), 204
+      return jsonify({'message' : 'todo has been deleted!'}), 200
