@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block title %} Edit tag{% endblock %}
+{% block body %}
+
+
+<div style="text-align: center; padding-top: 20px;">
+    <h2 class="title">
+        Edit tag</h2>
+</div>
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form class="form" method="post" action="{{ url_for('post.edit_tag', tag_id=tag.id) }}" novalidate>
+            {{ form.csrf_token }}
+            {{ render_field(form.name) }}
+            {{ form.submit(class="btn-round btn btn-primary btn-lg") }}
+        </form>        
+    </div>
+</div>
+
+
+{% endblock %}
