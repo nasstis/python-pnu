@@ -69,4 +69,8 @@ def create_app(config_name="default"):
 
         app.register_blueprint(users_api_bp)
 
+        from .swagger import swagger_bp
+
+        app.register_blueprint(swagger_bp)
+
     return app
