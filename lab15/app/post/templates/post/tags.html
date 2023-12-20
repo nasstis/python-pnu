@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block title %} Tags{% endblock %}
+{% block body %}
+
+<div class="text-center">
+    <h2 class="title">Tags</h2>
+  </div>
+
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tag in tags %}
+              <tr>
+                <td>{{ tag.id }}</td>
+                <td>{{ tag.name }}</td>
+                <td>
+                  <a href="{{ url_for('post.edit_tag', tag_id=tag.id) }}" class="btn btn-primary">Edit</a>
+                  <form action="{{ url_for('post.delete_tag', tag_id=tag.id) }}" method="post" style="display: inline-block;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<div style="text-align: center; padding-top: 20px;">
+    <h2 class="title">
+        Add new tag</h2>
+</div>
+<div class="card mx-auto" style="max-width: 60%;">
+    <div class="card-body">
+        <form class="form" method="post" action="{{ url_for('post.tags') }}" novalidate >
+            {{ form.csrf_token }}
+                {{ render_field(form.name)}}
+            {{ form.submit(class="btn-round btn btn-primary btn-lg") }}
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
